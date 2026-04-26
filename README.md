@@ -1,6 +1,41 @@
-# ShipCheck AI
+**ShipCheck AI is a Cloudflare-native deployment readiness agent that tells you if your code is safe to ship — and exactly what to fix before you deploy.**
 
-ShipCheck AI is a Cloudflare-native deployment readiness reviewer. It ingests a GitHub repository or pull request, runs a multi-step workflow with Workers AI, stores state in Durable Objects, and provides an interactive dashboard with iterative remediation chat.
+Paste a GitHub repo or PR and get:
+- ⚠️ Production risk analysis (security, reliability, performance, etc.)
+- 📊 Structured “ship-readiness” report
+- 🛠️ Ordered fix plan (minimal steps to safe deployment)
+- 💬 Iterative remediation chat grounded in your code
+
+---
+
+## Try it:
+
+```bash
+npm install
+npm run dev
+
+Open:
+http://localhost:8787
+
+Then paste a public repo (e.g.):
+https://github.com/cloudflare/workers-sdk
+
+Or run demo. 
+```
+
+
+## What makes this different
+
+Most AI code reviewers focus on syntax or style.
+
+**ShipCheck AI focuses on deployment risk:**
+
+- Will this break in production?
+- Can you roll it back safely?
+- Are you missing observability?
+- Are you exposing security risks?
+
+Then it gives you a **minimal, ordered fix plan** to ship safely.
 
 ## Why this is Cloudflare-native
 

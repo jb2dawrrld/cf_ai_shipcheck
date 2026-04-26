@@ -1,5 +1,47 @@
 # Prompt Catalog
 
+## Prompt 1 - Backend Foundation Workflow
+
+You are building ShipCheck AI, a Cloudflare-native deployment review agent.
+
+We are using:
+- Cloudflare Workers (TypeScript)
+- Durable Objects for stateful sessions
+- No frontend yet
+
+Goal:
+Set up the backend foundation.
+
+Tasks:
+1. Create a Durable Object class called `ReviewAgent` in src/agent/ReviewAgent.ts.
+   - It should store:
+     - repoUrl
+     - optional prNumber
+     - review status ("idle" | "analyzing" | "done")
+     - basic in-memory state (use Durable Object storage)
+
+2. Create a POST endpoint `/api/reviews/start` in src/index.ts:
+   - Accept JSON body:
+     - repoUrl: string
+     - prNumber?: number
+   - Instantiate or route to a Durable Object instance (one per repo)
+   - Store the repo info in the Durable Object
+   - Return a sessionId
+
+3. Add a GET endpoint `/api/reviews/:id`:
+   - Returns the stored state for that session
+
+4. Keep code modular and production-ready.
+
+5. Add comments explaining how Durable Objects are used.
+
+Do NOT:
+- Add AI logic yet
+- Add frontend
+- Overcomplicate anything
+
+Focus on correctness and clean structure.
+
 ## Prompt 2 — Workers AI Review Pass
 
 Use this in `src/reviewer/prompts.ts` as the system prompt for the first structured deployment assessment, now executed inside `DeploymentReviewWorkflow`.
@@ -47,6 +89,43 @@ Return strict JSON with this shape:
 - Enforced uncertainty language and file-path citation behavior.
 - Standardized model output to strict JSON for safe parsing and validation.
 - Moved execution into Cloudflare Workflows, where category-specific prompts run in durable workflow steps and are merged into a final `ShipReadinessReport`.
+
+## Prompt 3 - Add Cloudflare Workflows to ShipCheck AI
+
+Add Cloudflare Workflows to ShipCheck AI.
+
+Goal:
+Move the review process from a direct request/response endpoint into a durable multi-step Workflow.
+
+Requirements:
+- Create a Workflow called `DeploymentReviewWorkflow`.
+- Trigger it from `POST /api/reviews/:id/analyze`.
+- The endpoint should start the workflow and immediately return:
+  - sessionId
+  - workflowInstanceId
+  - status: "queued"
+
+Workflow steps:
+1. Load session state from ReviewAgent.
+2. Accept files from the workflow payload for now.
+3. Filter important files.
+4. Chunk files if needed.
+5. Run Workers AI review by category.
+6. Merge category reports into one ShipReadinessReport.
+7. Store the final report back in the ReviewAgent Durable Object.
+8. If any step fails, store the error in the ReviewAgent.
+
+Use Workflows step-level structure clearly.
+Add retry configuration where appropriate.
+Keep all workflow logic modular.
+
+Update:
+- wrangler.jsonc bindings
+- src/types.ts
+- README
+- PROMPTS.md
+
+Do not add frontend yet.
 
 ## Prompt 4 — GitHub Repo and PR Ingestion
 
