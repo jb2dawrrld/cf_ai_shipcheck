@@ -1,5 +1,10 @@
 **ShipCheck AI is a Cloudflare-native deployment readiness agent that tells you if your code is safe to ship — and exactly what to fix before you deploy.**
 
+
+## Demo
+
+![ShipCheck AI Demo](src/demo/ezgif.com-animated-gif-maker.gif)
+
 Paste a GitHub repo or PR and get:
 - ⚠️ Production risk analysis (security, reliability, performance, etc.)
 - 📊 Structured “ship-readiness” report
