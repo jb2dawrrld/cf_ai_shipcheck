@@ -1,0 +1,492 @@
+:root {
+	color-scheme: dark;
+	--bg: #090d14;
+	--panel: #121a28;
+	--muted: #93a4ba;
+	--text: #eaf2ff;
+	--accent: #6ca8ff;
+	--accent-strong: #8fc2ff;
+	--border: #23344d;
+	--danger: #ff6b6b;
+	--ok: #28cf9d;
+	--warn: #f2b961;
+	--slate: #7d8ca1;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	font-family: "Nunito Sans", "DM Sans", "Segoe UI", sans-serif;
+	background:
+		radial-gradient(circle at 15% -10%, #213152 0%, transparent 35%),
+		radial-gradient(circle at 85% -20%, #1a2946 0%, transparent 35%),
+		var(--bg);
+	color: var(--text);
+}
+
+.container {
+	max-width: 980px;
+	margin: 0 auto;
+	padding: 32px 20px 48px;
+	display: grid;
+	gap: 16px;
+}
+
+.hero {
+	text-align: center;
+	padding: 12px 0 6px;
+}
+
+.hero-badge {
+	display: inline-flex;
+	padding: 5px 10px;
+	border-radius: 999px;
+	background: rgba(99, 167, 255, 0.14);
+	border: 1px solid rgba(121, 179, 255, 0.42);
+	color: #bcdcff;
+	font-size: 12px;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	margin-bottom: 10px;
+}
+
+.hero h1 {
+	margin: 0;
+	font-size: clamp(42px, 8vw, 62px);
+	letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+	margin: 8px 0 0;
+	font-size: 22px;
+	color: var(--muted);
+}
+
+.panel {
+	background: var(--panel);
+	border: 1px solid var(--border);
+	border-radius: 14px;
+	padding: 20px;
+}
+
+.form-panel {
+	background: #262f3f;
+}
+
+.status-block {
+	padding: 2px 2px 2px;
+}
+
+.panel h2 {
+	margin: 0 0 16px;
+	font-size: 18px;
+	font-weight: 550;
+	letter-spacing: -0.01em;
+}
+
+.form-grid {
+	display: grid;
+	gap: 14px;
+}
+
+label {
+	display: grid;
+	gap: 6px;
+	font-size: 14px;
+}
+
+input {
+	font-family: inherit;
+	background: #101a2a;
+	color: var(--text);
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	padding: 11px 12px;
+	transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+input:focus-visible {
+	outline: none;
+	border-color: var(--accent);
+	box-shadow: 0 0 0 3px rgba(102, 165, 255, 0.25);
+}
+
+.actions {
+	display: flex;
+	gap: 10px;
+}
+
+button {
+	font-family: inherit;
+	background: var(--accent);
+	color: #051123;
+	border: 1px solid transparent;
+	border-radius: 10px;
+	padding: 10px 15px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: transform 0.12s ease, filter 0.12s ease, background 0.12s ease,
+		border-color 0.12s ease;
+}
+
+button:hover:not(:disabled) {
+	transform: translateY(-1px);
+	filter: brightness(1.05);
+}
+
+button:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(102, 165, 255, 0.25);
+}
+
+#start-btn {
+	background: linear-gradient(135deg, #67a8ff, #86bcff);
+}
+
+#demo-btn {
+	background: #1b2a42;
+	color: #d8e9ff;
+	border-color: #304564;
+}
+
+button:disabled {
+	opacity: 0.55;
+	cursor: not-allowed;
+}
+
+.note {
+	color: #9eb0c8;
+	font-size: 13px;
+	margin: 0;
+	font-weight: 400;
+	line-height: 1.5;
+}
+
+.status {
+	padding: 2px 0 4px;
+	margin-bottom: 8px;
+	font-weight: 500;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+		"Courier New", monospace;
+	color: #d7e6ff;
+}
+
+.meta-list {
+	padding-left: 0;
+	list-style: none;
+	margin: 0;
+	display: grid;
+	gap: 4px;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+		"Courier New", monospace;
+	color: #c4d4ec;
+	font-size: 13px;
+}
+
+.meta-key {
+	color: #8ea7ca;
+}
+
+.overall {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	background: rgba(10, 18, 30, 0.8);
+	border: 1px solid var(--border);
+	padding: 12px 14px;
+	border-radius: 12px;
+}
+
+.score {
+	font-size: 56px;
+	font-weight: 700;
+	min-width: 92px;
+	line-height: 1;
+	color: var(--accent-strong);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.badge {
+	display: inline-block;
+	padding: 4px 10px;
+	border-radius: 8px;
+	font-size: 11px;
+	letter-spacing: 0.02em;
+	font-weight: 700;
+}
+
+.badge.pass {
+	background: color-mix(in oklab, var(--ok) 26%, black);
+	color: #b8ffe2;
+}
+
+.badge.needs_attention {
+	background: color-mix(in oklab, var(--warn) 26%, black);
+	color: #ffe6b5;
+}
+
+.badge.blocker {
+	background: color-mix(in oklab, var(--danger) 26%, black);
+	color: #ffd1d1;
+}
+
+.badge.unknown {
+	background: color-mix(in oklab, var(--slate) 26%, black);
+	color: #c6d3e2;
+}
+
+.cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 16px;
+}
+
+#category-cards {
+	gap: 20px;
+	padding: 4px;
+}
+
+.card {
+	background: #0e1522;
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	padding: 14px;
+	min-height: 122px;
+	display: grid;
+	align-content: start;
+	gap: 10px;
+}
+
+.card h3 {
+	margin: 0 0 6px;
+	font-size: 14px;
+	text-transform: capitalize;
+}
+
+.category-card {
+	min-height: 126px;
+}
+
+.list {
+	margin: 0;
+	padding-left: 0;
+	list-style: none;
+	display: grid;
+	gap: 14px;
+}
+
+.stack-item {
+	background: #0e1522;
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	padding: 13px 14px;
+}
+
+.stack-top {
+	display: flex;
+	justify-content: space-between;
+	gap: 10px;
+	align-items: center;
+	margin-bottom: 6px;
+}
+
+.stack-meta {
+	color: #9eb0c8;
+	font-size: 13px;
+	margin: 0;
+	font-weight: 400;
+	line-height: 1.5;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+		"Courier New", monospace;
+}
+
+.stack-body {
+	margin: 10px 0 0;
+	color: #c7d5eb;
+	font-weight: 350;
+	line-height: 1.55;
+}
+
+.error {
+	margin-top: 10px;
+	padding: 10px;
+	border-radius: 8px;
+	color: #ffd6d6;
+	background: color-mix(in oklab, var(--danger) 22%, black);
+	border: 1px solid color-mix(in oklab, var(--danger) 40%, black);
+}
+
+.hidden {
+	display: none;
+}
+
+.ingestion-meta {
+	color: #9eb0c8;
+	margin-bottom: 10px;
+	font-weight: 400;
+	line-height: 1.5;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+		"Courier New", monospace;
+}
+
+#fix-plan-meta {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+		"Courier New", monospace;
+}
+
+#executive-summary {
+	margin: 10px 0 0;
+	color: #cedbf0;
+	font-weight: 350;
+	line-height: 1.6;
+}
+
+.collapsible {
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	padding: 10px;
+	background: #262f3f;
+}
+
+.collapsible summary {
+	cursor: pointer;
+	user-select: none;
+	font-weight: 500;
+	margin-bottom: 8px;
+	padding: 8px 10px;
+	border-radius: 8px;
+	background: rgba(108, 168, 255, 0.14);
+	border: 1px solid rgba(143, 194, 255, 0.28);
+	color: #d8e9ff;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+		"Courier New", monospace;
+}
+
+.status-icon {
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	margin-right: 7px;
+	transform: translateY(-1px);
+}
+
+.status-good {
+	background: var(--ok);
+	box-shadow: 0 0 0 1px rgba(40, 207, 157, 0.35);
+}
+
+.status-warn {
+	background: var(--warn);
+	box-shadow: 0 0 0 1px rgba(242, 185, 97, 0.35);
+}
+
+.status-unavailable,
+.status-insufficient {
+	background: var(--slate);
+	box-shadow: 0 0 0 1px rgba(125, 140, 161, 0.35);
+}
+
+.chat-messages {
+	display: grid;
+	gap: 8px;
+	max-height: 360px;
+	overflow-y: auto;
+	padding-right: 2px;
+	margin-bottom: 10px;
+}
+
+.chat-message {
+	border: 1px solid var(--border);
+	background: #0f1726;
+	border-radius: 12px;
+	padding: 11px 12px;
+	max-width: 88%;
+}
+
+.chat-message.user {
+	border-color: color-mix(in oklab, var(--accent) 45%, var(--border));
+	background: color-mix(in oklab, var(--accent) 16%, #0f1725);
+	margin-left: auto;
+}
+
+.chat-message.assistant {
+	border-color: color-mix(in oklab, var(--ok) 40%, var(--border));
+	background: color-mix(in oklab, var(--ok) 12%, #0f1725);
+	margin-right: auto;
+}
+
+.chat-meta {
+	font-size: 12px;
+	color: var(--muted);
+	margin-bottom: 6px;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.chat-form {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 8px;
+	align-items: center;
+}
+
+.fix-banner {
+	margin-bottom: 10px;
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid color-mix(in oklab, var(--danger) 45%, black);
+	background: color-mix(in oklab, var(--danger) 22%, black);
+	color: #ffd4d4;
+	font-weight: 600;
+}
+
+#results-panel.hidden {
+	display: none;
+}
+
+#results-panel {
+	display: grid;
+	gap: 20px;
+}
+
+@media (max-width: 880px) {
+	.container {
+		padding: 20px 14px 36px;
+	}
+
+	.overall {
+		flex-direction: column;
+		align-items: center;
+		gap: 12px;
+		text-align: center;
+	}
+
+	.score {
+		font-size: 42px;
+		min-width: auto;
+	}
+
+	.cards {
+		grid-template-columns: 1fr;
+		gap: 14px;
+	}
+
+	#category-cards {
+		gap: 16px;
+		padding: 0;
+	}
+
+	#results-panel {
+		gap: 16px;
+	}
+
+	.chat-message {
+		max-width: 100%;
+	}
+}

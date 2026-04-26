@@ -1,65 +1,54 @@
-import { DurableObject } from "cloudflare:workers";
+import {
+	handleAnalyzeReview,
+	handleGetReview,
+	handleReviewChat,
+	handleStartReview,
+} from "./api/reviews";
+import { handleHealth } from "./api/system";
+import { handleDemoReview } from "./api/demo";
+export { ReviewAgent } from "./agent/ReviewAgent";
+export { DeploymentReviewWorkflow } from "./workflow/DeploymentReviewWorkflow";
 
 /**
- * Welcome to Cloudflare Workers! This is your first Durable Objects application.
+ * ShipCheck AI Worker — HTTP entrypoint.
  *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your Durable Object in action
- * - Run `npm run deploy` to publish your application
- *
- * Bind resources to your worker in `wrangler.jsonc`. After adding bindings, a type definition for the
- * `Env` object can be regenerated with `npm run cf-typegen`.
- *
- * Learn more at https://developers.cloudflare.com/durable-objects
+ * Durable Object routing (review sessions):
+ * - Each **repository** maps to one Durable Object id via `repoUrlToSessionId` (stable SHA-256 hex).
+ * - `env.REVIEW_AGENT.getByName(sessionId)` yields a **stub** that forwards
+ *   RPC calls (`startReview`, `getReviewState`) to the colocated `ReviewAgent` instance.
+ * - The same `sessionId` string is returned to clients so `GET /api/reviews/:id` can reach the correct DO
+ *   without a separate registry service.
  */
-
-
-/** A Durable Object's behavior is defined in an exported Javascript class */
-export class MyDurableObject extends DurableObject {
-	/**
-	 * The constructor is invoked once upon creation of the Durable Object, i.e. the first call to
-	 * 	`DurableObjectStub::get` for a given identifier (no-op constructors can be omitted)
-	 *
-	 * @param ctx - The interface for interacting with Durable Object state
-	 * @param env - The interface to reference bindings declared in wrangler.jsonc
-	 */
-	constructor(ctx: DurableObjectState, env: Env) {
-		super(ctx, env);
-	}
-
-	/**
-	 * The Durable Object exposes an RPC method sayHello which will be invoked when a Durable
-	 *  Object instance receives a request from a Worker via the same method invocation on the stub
-	 *
-	 * @param name - The name provided to a Durable Object instance from a Worker
-	 * @returns The greeting to be sent back to the Worker
-	 */
-	async sayHello(name: string): Promise<string> {
-		return `Hello, ${name}!`;
-	}
-}
-
 export default {
-	/**
-	 * This is the standard fetch handler for a Cloudflare Worker
-	 *
-	 * @param request - The request submitted to the Worker from the client
-	 * @param env - The interface to reference bindings declared in wrangler.jsonc
-	 * @param ctx - The execution context of the Worker
-	 * @returns The response to be sent back to the client
-	 */
-	async fetch(request, env, ctx): Promise<Response> {
-		// Create a stub to open a communication channel with the Durable Object
-		// instance named "foo".
-		//
-		// Requests from all Workers to the Durable Object instance named "foo"
-		// will go to a single remote Durable Object instance.
-		const stub = env.MY_DURABLE_OBJECT.getByName("foo");
+	async fetch(request, env, _ctx): Promise<Response> {
+		const url = new URL(request.url);
 
-		// Call the `sayHello()` RPC method on the stub to invoke the method on
-		// the remote Durable Object instance.
-		const greeting = await stub.sayHello("world");
+		// Static assets (e.g. public/index.html) are handled by Wrangler assets; only API routes need logic here.
+		if (url.pathname === "/api/reviews/start" && request.method === "POST") {
+			return handleStartReview(request, env);
+		}
+		if (url.pathname === "/api/health" && request.method === "GET") {
+			return handleHealth();
+		}
+		if (url.pathname === "/api/demo/review" && request.method === "POST") {
+			return handleDemoReview(env);
+		}
 
-		return new Response(greeting);
+		const reviewMatch = url.pathname.match(/^\/api\/reviews\/([^/]+)$/);
+		if (reviewMatch && request.method === "GET") {
+			return handleGetReview(reviewMatch[1], env);
+		}
+
+		const analyzeMatch = url.pathname.match(/^\/api\/reviews\/([^/]+)\/analyze$/);
+		if (analyzeMatch && request.method === "POST") {
+			return handleAnalyzeReview(analyzeMatch[1], request, env);
+		}
+
+		const chatMatch = url.pathname.match(/^\/api\/reviews\/([^/]+)\/chat$/);
+		if (chatMatch && request.method === "POST") {
+			return handleReviewChat(chatMatch[1], request, env);
+		}
+
+		return new Response("Not Found", { status: 404 });
 	},
 } satisfies ExportedHandler<Env>;

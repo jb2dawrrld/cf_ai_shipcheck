@@ -1,0 +1,8 @@
+{
+  "name": "shipcheck-sample",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-04-25",
+  "observability": {
+    "enabled": true
+  }
+}

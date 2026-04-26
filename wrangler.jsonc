@@ -9,9 +9,7 @@
 	"compatibility_date": "2026-04-25",
 	"migrations": [
 		{
-			"new_sqlite_classes": [
-				"MyDurableObject"
-			],
+			"new_sqlite_classes": ["ReviewAgent"],
 			"tag": "v1"
 		}
 	],
@@ -22,11 +20,21 @@
 	"durable_objects": {
 		"bindings": [
 			{
-				"class_name": "MyDurableObject",
-				"name": "MY_DURABLE_OBJECT"
+				"class_name": "ReviewAgent",
+				"name": "REVIEW_AGENT"
 			}
 		]
 	},
+	"ai": {
+		"binding": "AI"
+	},
+	"workflows": [
+		{
+			"name": "deployment-review-workflow",
+			"binding": "DEPLOYMENT_REVIEW_WORKFLOW",
+			"class_name": "DeploymentReviewWorkflow"
+		}
+	],
 	"observability": {
 		"enabled": true
 	},

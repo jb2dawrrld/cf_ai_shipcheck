@@ -1,20 +1,113 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Hello, World!</title>
+		<title>ShipCheck AI</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Quicksand:wght@300..700&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="/styles.css" />
 	</head>
 	<body>
-		<h1 id="heading"></h1>
-		<p>This page comes from a static asset stored at `public/index.html` as configured in `wrangler.jsonc`.</p>
-		<script>
-			fetch('/message')
-				.then((resp) => resp.text())
-				.then((text) => {
-					const h1 = document.getElementById('heading');
-					h1.textContent = text;
-				});
-		</script>
+		<main class="container">
+			<header class="hero">
+				<span class="hero-badge">Cloudflare-native</span>
+				<h1>ShipCheck AI</h1>
+				<p class="hero-subtitle">Cloudflare-native deployment readiness review</p>
+			</header>
+
+			<section class="panel form-panel">
+				<h2>Review Form</h2>
+				<form id="review-form" class="form-grid">
+					<label>
+						GitHub Repo URL
+						<input id="repo-url" name="repoUrl" type="url" placeholder="https://github.com/owner/repo or .../pull/123" required />
+					</label>
+					<label>
+						PR Number (optional)
+						<input id="pr-number" name="prNumber" type="number" min="1" placeholder="123" />
+					</label>
+					<label>
+						GitHub Token (optional)
+						<input id="github-token" name="githubToken" type="password" placeholder="ghp_..." autocomplete="off" />
+					</label>
+					<p class="note">Token is optional and never stored in localStorage or Durable Object storage.</p>
+					<div class="actions">
+						<button id="start-btn" type="submit">Start Review</button>
+						<button id="demo-btn" type="button">Try Demo Review</button>
+					</div>
+				</form>
+			</section>
+
+			<section class="status-block" aria-live="polite">
+				<div id="status" class="status">Idle.</div>
+				<ul class="meta-list code-meta">
+					<li><span class="meta-key">session_id</span>: <span id="session-id">-</span></li>
+					<li><span class="meta-key">workflow_id</span>: <span id="workflow-id">-</span></li>
+					<li><span class="meta-key">review_status</span>: <span id="review-status">-</span></li>
+				</ul>
+				<div id="error-message" class="error hidden"></div>
+			</section>
+
+			<div id="results-panel" class="hidden">
+				<section class="panel">
+					<h2>Overall Score + Verdict</h2>
+					<div class="overall">
+						<div id="overall-score" class="score">-</div>
+						<div>
+							<div id="overall-verdict" class="badge unknown">unknown</div>
+							<p id="executive-summary">No report yet.</p>
+						</div>
+					</div>
+				</section>
+
+				<section class="panel">
+					<h2>Category Cards</h2>
+					<div id="category-cards" class="cards"></div>
+				</section>
+
+				<section class="panel">
+					<h2>Recommended Fix Plan (Summary)</h2>
+					<ul id="fix-plan" class="list"></ul>
+				</section>
+
+				<section class="panel">
+					<h2>Top Risks</h2>
+					<ul id="top-risks" class="list"></ul>
+				</section>
+
+				<section class="panel">
+					<h2>Skipped Files / Ingestion Metadata</h2>
+					<details id="ingestion-details" class="collapsible">
+						<summary id="ingestion-summary">Show ingestion metadata</summary>
+						<div id="ingestion-meta" class="ingestion-meta">No ingestion data yet.</div>
+						<ul id="skipped-files" class="list"></ul>
+					</details>
+				</section>
+
+				<section class="panel">
+					<h2>Fix Plan</h2>
+					<div id="fix-plan-banner" class="fix-banner hidden">Blocks deployment until addressed.</div>
+					<div id="fix-plan-meta" class="ingestion-meta">No generated fix plan yet.</div>
+					<div id="fix-plan-steps" class="cards"></div>
+				</section>
+
+				<section class="panel">
+					<h2>Iterative Remediation Chat</h2>
+					<p class="note">Chat is enabled after a report is available for the current session.</p>
+					<div id="chat-messages" class="chat-messages"></div>
+					<form id="chat-form" class="chat-form">
+						<input id="chat-input" type="text" placeholder="Ask: What should I fix first?" maxlength="2000" disabled />
+						<button id="chat-send-btn" type="submit" disabled>Send</button>
+					</form>
+				</section>
+			</div>
+		</main>
+
+		<script type="module" src="/app.js"></script>
 	</body>
 </html>
